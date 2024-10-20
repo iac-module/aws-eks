@@ -1,6 +1,6 @@
 module "karpenter" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=17448b4782b785403a395f96e1b5520e78f14529"
-  #20.15.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=00d4cc1373d97a5abfa05b7cc75e9c9a189e4d5f"
+  #20.26.0"
   count = var.karpenter.create ? 1 : 0
 
   create                                  = var.karpenter.create
@@ -18,9 +18,11 @@ module "karpenter" {
   iam_policy_use_name_prefix              = var.karpenter.iam_policy_use_name_prefix
   iam_policy_path                         = var.karpenter.iam_policy_path
   iam_policy_description                  = var.karpenter.iam_policy_description
+  iam_policy_statements                   = var.karpenter.iam_policy_statements
   iam_role_policies                       = var.karpenter.iam_role_policies
   ami_id_ssm_parameter_arns               = var.karpenter.ami_id_ssm_parameter_arns
   enable_pod_identity                     = var.karpenter.enable_pod_identity
+  enable_v1_permissions                   = var.karpenter.enable_v1_permissions
   enable_irsa                             = var.karpenter.enable_irsa
   irsa_oidc_provider_arn                  = module.eks[0].oidc_provider_arn
   irsa_namespace_service_accounts         = var.karpenter.irsa_namespace_service_accounts

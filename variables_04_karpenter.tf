@@ -19,7 +19,9 @@ variable "karpenter" {
     iam_policy_use_name_prefix        = optional(bool, true)
     iam_policy_path                   = optional(string, "/")
     iam_policy_description            = optional(string, "Karpenter controller IAM policy")
+    iam_policy_statements             = optional(any, [])
     iam_role_policies                 = optional(map(string), {})
+    enable_v1_permissions             = optional(bool, false) # TODO - make v1 permssions the default policy at next breaking change
     ami_id_ssm_parameter_arns         = optional(list(string), [])
     enable_pod_identity               = optional(bool, true)
     ################################################################################

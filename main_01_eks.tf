@@ -1,6 +1,6 @@
 module "eks" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=17448b4782b785403a395f96e1b5520e78f14529"
-  #20.15.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=00d4cc1373d97a5abfa05b7cc75e9c9a189e4d5f"
+  #20.26.0"
   count = var.create ? 1 : 0
 
   create                                       = var.create
@@ -10,6 +10,7 @@ module "eks" {
   cluster_version                              = var.cluster_version
   cluster_enabled_log_types                    = var.cluster_enabled_log_types
   authentication_mode                          = var.authentication_mode
+  cluster_upgrade_policy                       = var.cluster_upgrade_policy
   cluster_additional_security_group_ids        = var.cluster_additional_security_group_ids
   control_plane_subnet_ids                     = var.control_plane_subnet_ids
   subnet_ids                                   = var.subnet_ids
@@ -25,6 +26,7 @@ module "eks" {
   cluster_tags                                 = var.cluster_tags
   create_cluster_primary_security_group_tags   = var.create_cluster_primary_security_group_tags
   cluster_timeouts                             = var.cluster_timeouts
+  bootstrap_self_managed_addons                = var.bootstrap_self_managed_addons
   access_entries                               = var.access_entries
   enable_cluster_creator_admin_permissions     = var.enable_cluster_creator_admin_permissions
   create_kms_key                               = var.create_kms_key

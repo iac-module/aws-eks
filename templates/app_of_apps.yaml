@@ -17,8 +17,8 @@ applications:
       namespace: ${namespace}
     syncPolicy:
       automated:
-        prune: true
-        selfHeal: true
+        prune: ${automated_prune}
+        selfHeal: ${automated_selfHeal}
       syncOptions:
         - ApplyOutOfSyncOnly=true
 projects:

@@ -1,16 +1,18 @@
 variable "argocd" {
   description = "ArgoCD variables"
   type = object({
-    create            = optional(bool, true)
-    tags              = optional(map(string), {})
-    namespace         = optional(string, "argo")
-    extra_command_arg = optional(list(string), [])
-    chart_repo        = optional(string, "https://argoproj.github.io/argo-helm")
-    chart_name        = optional(string, "argo-cd")
-    chart_version     = optional(string, "7.1.3")
-    helm_release_name = optional(string, "argocd")
-    app_project_name  = optional(string, "cluster-addons")
-    path_to_values    = optional(string, "argocd-values.yaml")
+    create             = optional(bool, true)
+    tags               = optional(map(string), {})
+    namespace          = optional(string, "argo")
+    extra_command_arg  = optional(list(string), [])
+    chart_repo         = optional(string, "https://argoproj.github.io/argo-helm")
+    chart_name         = optional(string, "argo-cd")
+    chart_version      = optional(string, "7.1.3")
+    helm_release_name  = optional(string, "argocd")
+    app_project_name   = optional(string, "cluster-addons")
+    path_to_values     = optional(string, "argocd-values.yaml")
+    automated_prune    = optional(string, "false")
+    automated_selfHeal = optional(string, "true")
     repo_credentials_configuration = object({
       repo_url                       = string
       secret_name                    = optional(string, "argocd-infra-deployment-repo")
@@ -28,6 +30,13 @@ variable "argocd" {
         url            = optional(string, "git@github.com:X/Y-K8S-INFRA.git")
         targetRevision = optional(string, "HEAD")
       }))
+    }))
+    oidc_auth = optional(object({
+      create = optional(bool, true)
+      ## AWS Secret Manager path.
+      aws = optional(string, "argocd-oidc-config")
+      ## Kubernetes secret name
+      k8s = optional(string, "argocd-oidc-config")
     }))
   })
 }

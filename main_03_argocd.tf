@@ -27,6 +27,20 @@ resource "kubernetes_namespace" "argocd" {
   }
 }
 
+# Kubernetes secret with ArgoCD OIDC config
+resource "kubernetes_secret" "oidc_secret" {
+  metadata {
+    name      = var.argocd.oidc_auth.k8s
+    namespace = var.argocd.namespace
+    labels = {
+      "app.kubernetes.io/part-of" = "argocd"
+    }
+  }
+  data = {
+    clientSecret = data.aws_ssm_parameter.oidc_client_secret[0].value
+  }
+}
+
 resource "kubernetes_secret" "repository_secret" {
   count = var.argocd.create && var.create ? 1 : 0
   metadata {
@@ -67,12 +81,14 @@ resource "helm_release" "app_of_apps" {
   version    = var.argocd.app_of_apps.chart_version
   values = [
     templatefile("${path.module}/templates/app_of_apps.yaml", {
-      namespace      = kubernetes_namespace.argocd[0].id
-      repoURL        = var.argocd.app_of_apps.repository.url
-      targetRevision = var.argocd.app_of_apps.repository.targetRevision
-      path           = var.argocd.app_of_apps.repository.path
-      app_name       = var.argocd.app_of_apps.name
-      project_name   = var.argocd.app_project_name
+      namespace          = kubernetes_namespace.argocd[0].id
+      repoURL            = var.argocd.app_of_apps.repository.url
+      targetRevision     = var.argocd.app_of_apps.repository.targetRevision
+      path               = var.argocd.app_of_apps.repository.path
+      app_name           = var.argocd.app_of_apps.name
+      project_name       = var.argocd.app_project_name
+      automated_prune    = var.argocd.automated_prune
+      automated_selfHeal = var.argocd.automated_selfHeal
     })
   ]
 }
