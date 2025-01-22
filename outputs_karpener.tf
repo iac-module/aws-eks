@@ -49,17 +49,17 @@ output "event_rules" {
 # Node IAM Role
 ################################################################################
 
-output "node_iam_role_name" {
+output "karpenter_node_iam_role_name" {
   description = "The name of the node IAM role"
   value       = try(module.karpenter[0].node_iam_role_name, null)
 }
 
-output "node_iam_role_arn" {
+output "karpenter_node_iam_role_arn" {
   description = "The Amazon Resource Name (ARN) specifying the node IAM role"
   value       = try(module.karpenter[0].node_iam_role_arn, null)
 }
 
-output "node_iam_role_unique_id" {
+output "karpenter_node_iam_role_unique_id" {
   description = "Stable and unique string identifying the node IAM role"
   value       = try(module.karpenter[0].node_iam_role_unique_id, null)
 }

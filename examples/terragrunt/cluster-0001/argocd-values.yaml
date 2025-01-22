@@ -4,11 +4,19 @@ crds:
 global:
   additionalLabels:
     fargate_ready: "true"
-  domain: argo-infra.X.Z.com
-
+  domain: argo-infra.x.y
+controller:
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
 configs:
   params:
     server.insecure: true
+    reposerver.max.combined.directory.manifests.size: "230M"
 server:
   logLevel: info
   resources:
@@ -17,9 +25,12 @@ server:
       memory: 64Mi
   ingress:
     enabled: true
-    ingressClassName: external-ingress
+    ingressClassName: Z-ingress
 repoServer:
   replicas: 1
+  env:
+    - name: "ARGOCD_EXEC_TIMEOUT"
+      value: "300"
   logLevel: info
   resources:
     requests:

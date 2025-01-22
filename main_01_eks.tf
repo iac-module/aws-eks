@@ -1,6 +1,6 @@
 module "eks" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=00d4cc1373d97a5abfa05b7cc75e9c9a189e4d5f"
-  #20.26.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=7acf66f8b5ade58689302a86d3857b7d40dc0123"
+  #v20.33.0"
   count = var.create ? 1 : 0
 
   create                                       = var.create
@@ -10,7 +10,10 @@ module "eks" {
   cluster_version                              = var.cluster_version
   cluster_enabled_log_types                    = var.cluster_enabled_log_types
   authentication_mode                          = var.authentication_mode
+  cluster_compute_config                       = var.cluster_compute_config
   cluster_upgrade_policy                       = var.cluster_upgrade_policy
+  cluster_remote_network_config                = var.cluster_remote_network_config
+  cluster_zonal_shift_config                   = var.cluster_zonal_shift_config
   cluster_additional_security_group_ids        = var.cluster_additional_security_group_ids
   control_plane_subnet_ids                     = var.control_plane_subnet_ids
   subnet_ids                                   = var.subnet_ids
@@ -76,6 +79,7 @@ module "eks" {
   iam_role_description                         = var.iam_role_description
   iam_role_permissions_boundary                = var.iam_role_permissions_boundary
   iam_role_additional_policies                 = var.iam_role_additional_policies
+  enable_security_groups_for_pods              = var.enable_security_groups_for_pods
   iam_role_tags                                = var.iam_role_tags
   cluster_encryption_policy_use_name_prefix    = var.cluster_encryption_policy_use_name_prefix
   cluster_encryption_policy_name               = var.cluster_encryption_policy_name
@@ -83,6 +87,15 @@ module "eks" {
   cluster_encryption_policy_path               = var.cluster_encryption_policy_path
   cluster_encryption_policy_tags               = var.cluster_encryption_policy_tags
   dataplane_wait_duration                      = var.dataplane_wait_duration
+  enable_auto_mode_custom_tags                 = var.enable_auto_mode_custom_tags
+  create_node_iam_role                         = var.create_node_iam_role
+  node_iam_role_name                           = var.node_iam_role_name
+  node_iam_role_use_name_prefix                = var.node_iam_role_use_name_prefix
+  node_iam_role_path                           = var.node_iam_role_path
+  node_iam_role_description                    = var.node_iam_role_description
+  node_iam_role_permissions_boundary           = var.node_iam_role_permissions_boundary
+  node_iam_role_additional_policies            = var.node_iam_role_additional_policies
+  node_iam_role_tags                           = var.node_iam_role_tags
   cluster_addons                               = var.cluster_addons
   cluster_addons_timeouts                      = var.cluster_addons_timeouts
   cluster_identity_providers                   = var.cluster_identity_providers

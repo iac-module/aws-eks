@@ -1,6 +1,6 @@
 module "karpenter" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=00d4cc1373d97a5abfa05b7cc75e9c9a189e4d5f"
-  #20.26.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=7acf66f8b5ade58689302a86d3857b7d40dc0123"
+  #v20.33.0"
   count = var.karpenter.create ? 1 : 0
 
   create                                  = var.karpenter.create
@@ -54,6 +54,6 @@ module "karpenter" {
 }
 
 resource "aws_iam_service_linked_role" "spot" {
-  count            = var.karpenter.create ? 1 : 0
+  count            = var.karpenter.create && var.karpenter.create_spot_service_linked_role ? 1 : 0
   aws_service_name = "spot.amazonaws.com"
 }

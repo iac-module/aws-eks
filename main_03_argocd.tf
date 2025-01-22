@@ -29,6 +29,7 @@ resource "kubernetes_namespace" "argocd" {
 
 # Kubernetes secret with ArgoCD OIDC config
 resource "kubernetes_secret" "oidc_secret" {
+  count = var.argocd.oidc_auth.create ? 1 : 0
   metadata {
     name      = var.argocd.oidc_auth.k8s
     namespace = var.argocd.namespace

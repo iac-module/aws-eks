@@ -23,7 +23,7 @@ module "s3_bucket_for_logs" {
 module "lb_controller_irsa" {
   count = var.aws_lb_resources.create && var.create ? 1 : 0
 
-  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=de95e21a3bc51cd3a44b3b95a4c2f61000649ebb" #v5.39.1
+  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e803e25ce20a6ebd5579e0896f657fa739f6f03e" #v5.52.2
   role_name                              = format("${var.aws_lb_resources.role_name}%s", var.cluster_name)
   attach_load_balancer_controller_policy = true
   role_permissions_boundary_arn          = var.aws_lb_resources.role_permissions_boundary_arn

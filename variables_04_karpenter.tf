@@ -1,9 +1,9 @@
 variable "karpenter" {
   description = "Karpenter variables"
   type = object({
-    create = optional(bool, true)
-    tags   = optional(map(string), {})
-    #    cluster_name = optional(string, "")
+    create                          = optional(bool, true)
+    tags                            = optional(map(string), {})
+    create_spot_service_linked_role = optional(bool, true)
     ################################################################################
     # Karpenter controller IAM Role
     ################################################################################

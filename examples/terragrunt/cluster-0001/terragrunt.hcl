@@ -4,7 +4,7 @@ include {
 iam_role = local.account_vars.iam_role
 
 terraform {
-  source = "git::https://github.com/iac-module/aws-eks.git//?ref=v1.0.0"
+  source = "git::https://github.com/iac-module/aws-eks.git//?ref=v1.2.0"
 }
 
 locals {
@@ -21,7 +21,7 @@ dependency "vpc" {
 
 inputs = {
   cluster_name                  = local.cluster_name
-  cluster_version               = "1.30"
+  cluster_version               = "1.31"
   iam_role_permissions_boundary = local.account_vars.locals.permissions_boundary
 
   cluster_endpoint_public_access = true
