@@ -29,16 +29,16 @@ resource "kubernetes_namespace" "argocd" {
 
 # Kubernetes secret with ArgoCD OIDC config
 resource "kubernetes_secret" "oidc_secret" {
-  count = var.argocd.oidc_auth.create ? 1 : 0
+  for_each = var.argocd.oidc_auth
   metadata {
-    name      = var.argocd.oidc_auth.k8s
+    name      = each.value.k8s
     namespace = var.argocd.namespace
     labels = {
       "app.kubernetes.io/part-of" = "argocd"
     }
   }
   data = {
-    clientSecret = data.aws_ssm_parameter.oidc_client_secret[0].value
+    "${each.value.data}" = data.aws_ssm_parameter.oidc_config[each.key].value
   }
 }
 

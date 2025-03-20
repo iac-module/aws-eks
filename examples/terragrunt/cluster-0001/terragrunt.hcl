@@ -4,7 +4,7 @@ include {
 iam_role = local.account_vars.iam_role
 
 terraform {
-  source = "git::https://github.com/iac-module/aws-eks.git//?ref=v1.2.0"
+  source = "git::https://github.com/iac-module/aws-eks.git//?ref=v1.2.2"
 }
 
 locals {
@@ -159,7 +159,7 @@ inputs = {
 
   }
   argocd = {
-     repo_credentials_configuration = {
+    repo_credentials_configuration = {
       repo_url                       = "git@github.com:X/Y-K8S-INFRA.git"
       param_store_repository_ssk_key = "/X/Y-0001/infra/shared/secret/K8S-INFRA-DeployKey"
     }
@@ -168,8 +168,22 @@ inputs = {
       repository = {
         url            = "git@github.com:X/Y-K8S-INFRA.git"
         targetRevision = "main"
-        path           = "dev-0001"
+        path           = "${local.account_vars.locals.env_name}"
+      }
+    }
+    oidc_auth = {
+      OIDC-ClientSecre = {
+        aws  = "/${local.account_vars.locals.owner}/${local.account_vars.locals.env_name}/infra/shared/secret/K8S-ARGO-OIDC-ClientSecret"
+        k8s  = "argocd-oidc-config"
+        data = "clientSecret"
+      }
+      OIDC-ServiceAccount = {
+        aws  = "/${local.account_vars.locals.owner}/${local.account_vars.locals.env_name}/infra/shared/secret/K8S-ARGO-OIDC-ServiceAccount"
+        k8s  = "argocd-oidc-service-account"
+        data = "googleAuth.json"
       }
     }
   }
+
+
 }

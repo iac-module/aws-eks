@@ -7,7 +7,7 @@ variable "argocd" {
     extra_command_arg  = optional(list(string), [])
     chart_repo         = optional(string, "https://argoproj.github.io/argo-helm")
     chart_name         = optional(string, "argo-cd")
-    chart_version      = optional(string, "7.8.2")
+    chart_version      = optional(string, "7.8.13")
     helm_release_name  = optional(string, "argocd")
     app_project_name   = optional(string, "cluster-addons")
     path_to_values     = optional(string, "argocd-values.yaml")
@@ -31,12 +31,10 @@ variable "argocd" {
         targetRevision = optional(string, "HEAD")
       }))
     }))
-    oidc_auth = optional(object({
-      create = optional(bool, true)
-      ## AWS Secret Manager path.
-      aws = optional(string, "argocd-oidc-config")
-      ## Kubernetes secret name
-      k8s = optional(string, "argocd-oidc-config")
-    }))
+    oidc_auth = optional(map(object({
+      aws  = optional(string, "argocd-oidc-config")
+      k8s  = optional(string, "argocd-oidc-config")
+      data = optional(string, "clientSecret")
+    })), {})
   })
 }
