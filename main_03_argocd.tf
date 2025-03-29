@@ -38,12 +38,13 @@ resource "kubernetes_secret" "oidc_secret" {
     }
   }
   data = {
+    # tflint-ignore: terraform_deprecated_interpolation
     "${each.value.data}" = data.aws_ssm_parameter.oidc_config[each.key].value
   }
 }
 
-resource "kubernetes_secret" "repository_secret" {
-  count = var.argocd.create && var.create ? 1 : 0
+resource "kubernetes_secret" "repository_secret_deployment_key" {
+  count = var.argocd.create && var.argocd.repo_credentials_configuration.type == "deploy_key" && var.create ? 1 : 0
   metadata {
     name      = var.argocd.repo_credentials_configuration.secret_name
     namespace = kubernetes_namespace.argocd[0].id
@@ -53,10 +54,29 @@ resource "kubernetes_secret" "repository_secret" {
   }
   data = {
     type          = "git"
-    sshPrivateKey = data.aws_ssm_parameter.repo_ssh_key.value
+    sshPrivateKey = data.aws_ssm_parameter.ssh_key.value
     url           = var.argocd.repo_credentials_configuration.repo_url
   }
 }
+
+resource "kubernetes_secret" "repository_secret_github_app" {
+  count = var.argocd.create && var.argocd.repo_credentials_configuration.type == "github_app" && var.create ? 1 : 0
+  metadata {
+    name      = var.argocd.repo_credentials_configuration.secret_name
+    namespace = kubernetes_namespace.argocd[0].id
+    labels = {
+      "argocd.argoproj.io/secret-type" = "repo-creds"
+    }
+  }
+  data = {
+    githubAppID             = var.argocd.repo_credentials_configuration.githubAppID
+    githubAppInstallationID = var.argocd.repo_credentials_configuration.githubAppInstallationID
+    githubAppPrivateKey     = data.aws_ssm_parameter.ssh_key.value
+    url                     = var.argocd.repo_credentials_configuration.repo_url
+  }
+}
+
+
 
 resource "helm_release" "argocd" {
   count      = var.argocd.create && var.create ? 1 : 0

@@ -4,7 +4,7 @@ include {
 iam_role = local.account_vars.iam_role
 
 terraform {
-  source = "git::https://github.com/iac-module/aws-eks.git//?ref=v1.2.2"
+  source = "git::https://github.com/iac-module/aws-eks.git//?ref=v1.2.3"
 }
 
 locals {
@@ -149,7 +149,7 @@ inputs = {
     node_iam_role_permissions_boundary = local.account_vars.locals.permissions_boundary
     queue_managed_sse_enabled          = false
     queue_kms_master_key_id            = "alias/aws/sqs"
-    tags = local.common_tags.locals.common_tags
+    tags                               = local.common_tags.locals.common_tags
   }
   aws_lb_resources = {
     create                        = true
@@ -160,13 +160,16 @@ inputs = {
   }
   argocd = {
     repo_credentials_configuration = {
-      repo_url                       = "git@github.com:X/Y-K8S-INFRA.git"
-      param_store_repository_ssk_key = "/X/Y-0001/infra/shared/secret/K8S-INFRA-DeployKey"
+      type                           = "github_app"
+      githubAppID                    = "XXXXX"
+      githubAppInstallationID        = "YYYYY"
+      repo_url                       = "https://github.com/${local.account_vars.locals.gh_organization}/K8S-INFRA.git"
+      param_store_repository_ssk_key = "/${local.account_vars.locals.owner}/${local.account_vars.locals.env_name}/infra/shared/secret/K8S-INFRA-DeployKey"
     }
     app_of_apps = {
       name = local.cluster_name
       repository = {
-        url            = "git@github.com:X/Y-K8S-INFRA.git"
+        url            = "https://github.com/${local.account_vars.locals.gh_organization}/K8S-INFRA.git"
         targetRevision = "main"
         path           = "${local.account_vars.locals.env_name}"
       }

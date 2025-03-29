@@ -7,15 +7,18 @@ variable "argocd" {
     extra_command_arg  = optional(list(string), [])
     chart_repo         = optional(string, "https://argoproj.github.io/argo-helm")
     chart_name         = optional(string, "argo-cd")
-    chart_version      = optional(string, "7.8.13")
+    chart_version      = optional(string, "7.8.15")
     helm_release_name  = optional(string, "argocd")
     app_project_name   = optional(string, "cluster-addons")
     path_to_values     = optional(string, "argocd-values.yaml")
     automated_prune    = optional(string, "false")
     automated_selfHeal = optional(string, "true")
     repo_credentials_configuration = object({
+      type                           = optional(string, "deploy_key")
       repo_url                       = string
       secret_name                    = optional(string, "argocd-infra-deployment-repo")
+      githubAppID                    = optional(string, "")
+      githubAppInstallationID        = optional(string, "")
       param_store_repository_ssk_key = string
     })
     app_of_apps = optional(object({
