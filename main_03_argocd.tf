@@ -76,8 +76,6 @@ resource "kubernetes_secret" "repository_secret_github_app" {
   }
 }
 
-
-
 resource "helm_release" "argocd" {
   count      = var.argocd.create && var.create ? 1 : 0
   repository = var.argocd.chart_repo

@@ -1,5 +1,5 @@
 module "eks" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=dd2089b73b4ff296e519830efdfda760e8d52b8a" #v20.34.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=37e3348dffe06ea4b9adf9b54512e4efdb46f425" #v20.36.0"
   count  = var.create ? 1 : 0
 
   create                                       = var.create
@@ -29,6 +29,7 @@ module "eks" {
   create_cluster_primary_security_group_tags   = var.create_cluster_primary_security_group_tags
   cluster_timeouts                             = var.cluster_timeouts
   bootstrap_self_managed_addons                = var.bootstrap_self_managed_addons
+  cluster_force_update_version                 = var.cluster_force_update_version
   access_entries                               = var.access_entries
   enable_cluster_creator_admin_permissions     = var.enable_cluster_creator_admin_permissions
   create_kms_key                               = var.create_kms_key
@@ -116,4 +117,26 @@ resource "aws_security_group_rule" "node_to_cluster" {
   protocol                 = "-1"
   source_security_group_id = module.eks[0].node_security_group_id
   security_group_id        = module.eks[0].cluster_primary_security_group_id
+}
+
+resource "aws_security_group_rule" "from_fargate_to_cluster_dns_udp" { #allow to make DNS request from fargate nodes to DNS hosted on ec2
+  count                    = var.create && var.eks_cluster_allow_dns_from_cluster_to_nodes ? 1 : 0
+  description              = "From cluster to nodes UDP/53"
+  type                     = "ingress"
+  from_port                = 53
+  to_port                  = 53
+  protocol                 = "udp"
+  source_security_group_id = module.eks[0].cluster_primary_security_group_id
+  security_group_id        = module.eks[0].node_security_group_id
+}
+
+resource "aws_security_group_rule" "from_fargate_to_cluster_dns_tcp" { #allow to make DNS request from fargate nodes to DNS hosted on ec2
+  count                    = var.create && var.eks_cluster_allow_dns_from_cluster_to_nodes ? 1 : 0
+  description              = "From cluster to nodes TCP/53"
+  type                     = "ingress"
+  from_port                = 53
+  to_port                  = 53
+  protocol                 = "tcp"
+  source_security_group_id = module.eks[0].cluster_primary_security_group_id
+  security_group_id        = module.eks[0].node_security_group_id
 }
