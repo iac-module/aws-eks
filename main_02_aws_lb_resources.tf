@@ -1,7 +1,7 @@
 
 module "s3_bucket_for_logs" {
   count  = var.aws_lb_resources.create && var.create ? 1 : 0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=fc09cc6fb779b262ce1bee5334e85808a107d8a3" #v4.6.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=1a431dd0ccc2478399fce247a75caf40a109bb10" #v4.11.0
 
   bucket                   = "${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}-${var.aws_lb_resources.bucket_suffix}"
   acl                      = "log-delivery-write"
@@ -23,7 +23,7 @@ module "s3_bucket_for_logs" {
 module "lb_controller_irsa" {
   count = var.aws_lb_resources.create && var.create ? 1 : 0
 
-  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e803e25ce20a6ebd5579e0896f657fa739f6f03e" #v5.52.2
+  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=a787dce9c2b493398450af3efc21d6da44fad790" #v5.58.0
   role_name                              = format("${var.aws_lb_resources.role_name}%s", var.cluster_name)
   attach_load_balancer_controller_policy = true
   role_permissions_boundary_arn          = var.aws_lb_resources.role_permissions_boundary_arn
