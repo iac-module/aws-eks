@@ -7,7 +7,7 @@ variable "argocd" {
     extra_command_arg  = optional(list(string), [])
     chart_repo         = optional(string, "https://argoproj.github.io/argo-helm")
     chart_name         = optional(string, "argo-cd")
-    chart_version      = optional(string, "8.1.1")
+    chart_version      = optional(string, "8.2.1")
     helm_release_name  = optional(string, "argocd")
     app_project_name   = optional(string, "cluster-addons")
     path_to_values     = optional(string, "argocd-values.yaml")

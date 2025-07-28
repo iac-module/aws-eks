@@ -1,5 +1,3 @@
-## IRSA
-
 output "aws_lb_resources_s3_bucket_id" {
   description = "The name of the bucket."
   value       = try(module.s3_bucket_for_logs[0].s3_bucket_id, "")
@@ -48,4 +46,28 @@ output "s3_aws_lb_resources_bucket_website_endpoint" {
 output "s3_aws_lb_resources_bucket_website_domain" {
   description = "The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records."
   value       = try(module.s3_bucket_for_logs[0].s3_bucket_website_domain, "")
+}
+
+################################################################################
+# AWS Load Balancer Controller Pod Identity
+################################################################################
+
+output "aws_lb_controller_pod_identity_role_name" {
+  description = "The name of the AWS Load Balancer Controller pod identity IAM role"
+  value       = try(module.aws_lb_controller_pod_identity[0].iam_role_name, null)
+}
+
+output "aws_lb_controller_pod_identity_role_arn" {
+  description = "The Amazon Resource Name (ARN) specifying the AWS Load Balancer Controller pod identity IAM role"
+  value       = try(module.aws_lb_controller_pod_identity[0].iam_role_arn, null)
+}
+
+output "aws_lb_controller_pod_identity_role_unique_id" {
+  description = "Stable and unique string identifying the AWS Load Balancer Controller pod identity IAM role"
+  value       = try(module.aws_lb_controller_pod_identity[0].iam_role_unique_id, null)
+}
+
+output "aws_lb_controller_pod_identity_associations" {
+  description = "Map of AWS Load Balancer Controller pod identity associations created and their attributes"
+  value       = try(module.aws_lb_controller_pod_identity[0].associations, null)
 }

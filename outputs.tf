@@ -32,6 +32,11 @@ output "cluster_oidc_issuer_url" {
   value       = try(module.eks[0].cluster_oidc_issuer_url, null)
 }
 
+output "cluster_dualstack_oidc_issuer_url" {
+  description = "Dual-stack compatible URL on the EKS cluster for the OpenID Connect identity provider"
+  value       = try(module.eks[0].cluster_dualstack_oidc_issuer_url, null)
+}
+
 output "cluster_version" {
   description = "The Kubernetes version for the cluster"
   value       = try(module.eks[0].cluster_version, null)
