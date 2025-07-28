@@ -4,34 +4,50 @@ variable "karpenter" {
     create                          = optional(bool, true)
     tags                            = optional(map(string), {})
     create_spot_service_linked_role = optional(bool, true)
+    region                          = optional(string, null)
     ################################################################################
     # Karpenter controller IAM Role
     ################################################################################
-    create_iam_role                   = optional(bool, true)
-    iam_role_name                     = optional(string, "KarpenterController")
-    iam_role_use_name_prefix          = optional(bool, true)
-    iam_role_path                     = optional(string, "/")
-    iam_role_description              = optional(string, "Karpenter controller IAM role")
-    iam_role_max_session_duration     = optional(number, null)
-    iam_role_permissions_boundary_arn = optional(string, null)
-    iam_role_tags                     = optional(map(any), {})
-    iam_policy_name                   = optional(string, "KarpenterController")
-    iam_policy_use_name_prefix        = optional(bool, true)
-    iam_policy_path                   = optional(string, "/")
-    iam_policy_description            = optional(string, "Karpenter controller IAM policy")
-    iam_policy_statements             = optional(any, [])
-    iam_role_policies                 = optional(map(string), {})
-    enable_v1_permissions             = optional(bool, false) # TODO - make v1 permssions the default policy at next breaking change
-    ami_id_ssm_parameter_arns         = optional(list(string), [])
-    enable_pod_identity               = optional(bool, true)
-    ################################################################################
-    # IAM Role for Service Account (IRSA)
-    ################################################################################
-    enable_irsa                     = optional(bool, false)
-    irsa_oidc_provider_arn          = optional(string, "")
-    irsa_namespace_service_accounts = optional(list(string), ["karpenter:karpenter"])
-    irsa_assume_role_condition_test = optional(string, "StringEquals")
-    ################################################################################
+    create_iam_role                           = optional(bool, true)
+    iam_role_name                             = optional(string, "KarpenterController")
+    iam_role_use_name_prefix                  = optional(bool, true)
+    iam_role_path                             = optional(string, "/")
+    iam_role_description                      = optional(string, "Karpenter controller IAM role")
+    iam_role_max_session_duration             = optional(number, null)
+    iam_role_permissions_boundary_arn         = optional(string, null)
+    iam_role_tags                             = optional(map(any), {})
+    iam_enable_irsa                           = optional(bool, false)
+    iam_policy_name                           = optional(string, "KarpenterController")
+    iam_policy_use_name_prefix                = optional(bool, false)
+    iam_policy_path                           = optional(string, "/")
+    iam_policy_description                    = optional(string, "Karpenter controller IAM policy")
+    iam_role_override_assume_policy_documents = optional(list(string), [])
+    iam_role_source_assume_policy_documents   = optional(list(string), [])
+
+    iam_policy_statements = optional(list(object({
+      sid           = optional(string)
+      actions       = optional(list(string))
+      not_actions   = optional(list(string))
+      effect        = optional(string)
+      resources     = optional(list(string))
+      not_resources = optional(list(string))
+      principals = optional(list(object({
+        type        = string
+        identifiers = list(string)
+      })))
+      not_principals = optional(list(object({
+        type        = string
+        identifiers = list(string)
+      })))
+      condition = optional(list(object({
+        test     = string
+        values   = list(string)
+        variable = string
+      })))
+    })), null)
+    iam_role_policies         = optional(map(string), {})
+    ami_id_ssm_parameter_arns = optional(list(string), [])
+    # ################################################################################
     # Pod Identity Association
     ################################################################################
     create_pod_identity_association = optional(bool, false)

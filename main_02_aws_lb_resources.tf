@@ -1,9 +1,9 @@
 
 module "s3_bucket_for_logs" {
   count  = var.aws_lb_resources.create && var.create ? 1 : 0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=1a431dd0ccc2478399fce247a75caf40a109bb10" #v4.11.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=a1629887065e1132c1b819de0e75d8755c391d65" #v5.2.0
 
-  bucket                   = "${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}-${var.aws_lb_resources.bucket_suffix}"
+  bucket                   = "${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-${var.aws_lb_resources.bucket_suffix}"
   acl                      = "log-delivery-write"
   control_object_ownership = true
   object_ownership         = "ObjectWriter"
@@ -21,16 +21,32 @@ module "s3_bucket_for_logs" {
 }
 
 module "lb_controller_irsa" {
-  count = var.aws_lb_resources.create && var.create ? 1 : 0
+  count = var.aws_lb_resources.create && var.aws_lb_resources.enable_irsa ? 1 : 0
 
-  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=a787dce9c2b493398450af3efc21d6da44fad790" #v5.58.0
-  role_name                              = format("${var.aws_lb_resources.role_name}%s", var.cluster_name)
+  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=0792d7f2753c265e3d610a58348fa1c551cbe4b8" #v5.59.0
+  role_name                              = format("${var.aws_lb_resources.role_name}%s", var.name)
   attach_load_balancer_controller_policy = true
   role_permissions_boundary_arn          = var.aws_lb_resources.role_permissions_boundary_arn
   oidc_providers = {
     ex = {
       provider_arn               = module.eks[0].oidc_provider_arn
-      namespace_service_accounts = var.aws_lb_resources.namespace_service_accounts
+      namespace_service_accounts = ["${var.aws_lb_resources.namespace}:${var.aws_lb_resources.service_account}"]
+    }
+  }
+  tags = var.aws_lb_resources.tags
+}
+
+module "aws_lb_controller_pod_identity" {
+  count  = var.aws_lb_resources.create && var.aws_lb_resources.enable_pod_identity ? 1 : 0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks-pod-identity?ref=9478c492d293927d658503fc26b0fec5a30e92bd" #v1.12.1
+
+  name                            = format("${var.aws_lb_resources.role_name}%s", var.name)
+  attach_aws_lb_controller_policy = true
+  associations = {
+    lb-controller = {
+      cluster_name    = module.eks[0].cluster_name
+      namespace       = var.aws_lb_resources.namespace
+      service_account = var.aws_lb_resources.service_account
     }
   }
   tags = var.aws_lb_resources.tags

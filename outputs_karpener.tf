@@ -18,6 +18,25 @@ output "iam_role_unique_id" {
 }
 
 ################################################################################
+# Karpenter IRSA Role
+################################################################################
+
+output "karpenter_irsa_role_name" {
+  description = "The name of the Karpenter IRSA IAM role"
+  value       = try(module.karpenter[0].karpenter_irsa_role_name, null)
+}
+
+output "karpenter_irsa_role_arn" {
+  description = "The Amazon Resource Name (ARN) specifying the Karpenter IRSA IAM role"
+  value       = try(module.karpenter[0].karpenter_irsa_role_arn, null)
+}
+
+output "karpenter_irsa_role_unique_id" {
+  description = "Stable and unique string identifying the Karpenter IRSA IAM role"
+  value       = try(module.karpenter[0].karpenter_irsa_role_unique_id, null)
+}
+
+################################################################################
 # Node Termination Queue
 ################################################################################
 
