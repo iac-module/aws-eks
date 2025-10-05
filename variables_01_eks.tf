@@ -44,6 +44,12 @@ variable "enabled_log_types" {
   default     = ["audit", "api", "authenticator"]
 }
 
+variable "deletion_protection" {
+  description = "Whether to enable deletion protection for the cluster. When enabled, the cluster cannot be deleted unless deletion protection is first disabled"
+  type        = bool
+  default     = null
+}
+
 variable "force_update_version" {
   description = "Force version update by overriding upgrade-blocking readiness checks when updating a cluster"
   type        = bool
@@ -71,7 +77,8 @@ variable "upgrade_policy" {
   type = object({
     support_type = optional(string)
   })
-  default = null
+  default  = {}
+  nullable = false
 }
 
 variable "remote_network_config" {
@@ -218,7 +225,7 @@ variable "access_entries" {
         namespaces = optional(list(string))
         type       = string
       })
-    })))
+    })), {})
   }))
   default = {}
 }
@@ -605,6 +612,12 @@ variable "enable_auto_mode_custom_tags" {
   default     = true
 }
 
+variable "create_auto_mode_iam_resources" {
+  description = "Determines whether to create/attach IAM resources for EKS Auto Mode. Useful for when using only custom node pools and not built-in EKS Auto Mode node pools"
+  type        = bool
+  default     = false
+}
+
 ################################################################################
 # EKS Addons
 ################################################################################
@@ -629,10 +642,10 @@ variable "addons" {
       create = optional(string)
       update = optional(string)
       delete = optional(string)
-    }))
+    }), {})
     tags = optional(map(string), {})
   }))
-  default = null
+  default = {}
 }
 
 variable "addons_timeouts" {
@@ -841,7 +854,8 @@ variable "self_managed_node_groups" {
       }))
       strategy = optional(string)
       triggers = optional(list(string))
-    }))
+      })
+    )
     use_mixed_instances_policy = optional(bool)
     mixed_instances_policy = optional(object({
       instances_distribution = optional(object({

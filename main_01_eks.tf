@@ -1,5 +1,5 @@
 module "eks" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=074abf14097264dd13fe3a521cd1d0fe76f6b4ef" #v21.0.4"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=de2aa10f25c7f2d2ab1264f6451f7cbf57f784c4" #v21.3.1"
   count  = var.create ? 1 : 0
 
   create                                       = var.create
@@ -9,6 +9,7 @@ module "eks" {
   name                                         = var.name
   kubernetes_version                           = var.kubernetes_version
   enabled_log_types                            = var.enabled_log_types
+  deletion_protection                          = var.deletion_protection
   force_update_version                         = var.force_update_version
   authentication_mode                          = var.authentication_mode
   compute_config                               = var.compute_config
@@ -86,6 +87,7 @@ module "eks" {
   encryption_policy_tags                       = var.encryption_policy_tags
   dataplane_wait_duration                      = var.dataplane_wait_duration
   enable_auto_mode_custom_tags                 = var.enable_auto_mode_custom_tags
+  create_auto_mode_iam_resources               = var.create_auto_mode_iam_resources
   addons                                       = var.addons
   addons_timeouts                              = var.addons_timeouts
   identity_providers                           = var.identity_providers

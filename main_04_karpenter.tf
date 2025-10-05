@@ -1,5 +1,5 @@
 module "karpenter" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=074abf14097264dd13fe3a521cd1d0fe76f6b4ef" #v21.0.4"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=de2aa10f25c7f2d2ab1264f6451f7cbf57f784c4" #v21.3.1"
   count  = var.karpenter.create ? 1 : 0
 
   create                                    = var.karpenter.create
@@ -55,10 +55,10 @@ resource "aws_iam_service_linked_role" "spot" {
 }
 
 module "karpenter_irsa_role" {
-  count     = var.karpenter.create && var.karpenter.iam_enable_irsa ? 1 : 0
-  source    = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=0792d7f2753c265e3d610a58348fa1c551cbe4b8" #v5.59.0
-  role_name = "${var.name}-${var.karpenter.iam_role_name}"
-  role_policy_arns = {
+  count  = var.karpenter.create && var.karpenter.iam_enable_irsa ? 1 : 0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts?ref=dc7a9f3bed20aaaba05d151b0789745070424b3a" #v6.2.1
+  name   = "${var.name}-${var.karpenter.iam_role_name}"
+  policies = {
     svc = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.name}-${var.karpenter.iam_role_name}"
   }
   oidc_providers = {
