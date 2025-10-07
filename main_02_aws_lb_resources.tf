@@ -1,7 +1,7 @@
 
 module "s3_bucket_for_logs" {
   count  = var.aws_lb_resources.create && var.create ? 1 : 0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=a1629887065e1132c1b819de0e75d8755c391d65" #v5.2.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=c375418373496865e2770ad8aabfaf849d4caee5" #v5.7.0
 
   bucket                   = "${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-${var.aws_lb_resources.bucket_suffix}"
   acl                      = "log-delivery-write"
@@ -23,10 +23,10 @@ module "s3_bucket_for_logs" {
 module "lb_controller_irsa" {
   count = var.aws_lb_resources.create && var.aws_lb_resources.enable_irsa ? 1 : 0
 
-  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=0792d7f2753c265e3d610a58348fa1c551cbe4b8" #v5.59.0
-  role_name                              = format("${var.aws_lb_resources.role_name}%s", var.name)
+  source                                 = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts?ref=dc7a9f3bed20aaaba05d151b0789745070424b3a" #v6.2.1
+  name                                   = format("${var.aws_lb_resources.role_name}%s", var.name)
   attach_load_balancer_controller_policy = true
-  role_permissions_boundary_arn          = var.aws_lb_resources.role_permissions_boundary_arn
+  permissions_boundary                   = var.aws_lb_resources.role_permissions_boundary_arn
   oidc_providers = {
     ex = {
       provider_arn               = module.eks[0].oidc_provider_arn
@@ -38,7 +38,7 @@ module "lb_controller_irsa" {
 
 module "aws_lb_controller_pod_identity" {
   count  = var.aws_lb_resources.create && var.aws_lb_resources.enable_pod_identity ? 1 : 0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks-pod-identity?ref=9478c492d293927d658503fc26b0fec5a30e92bd" #v1.12.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks-pod-identity?ref=6dd790f10334e85639e53e1c6a2409479b28ecf4" #v2.0.0
 
   name                            = format("${var.aws_lb_resources.role_name}%s", var.name)
   attach_aws_lb_controller_policy = true
