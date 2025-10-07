@@ -1,5 +1,5 @@
 module "karpenter" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=de2aa10f25c7f2d2ab1264f6451f7cbf57f784c4" #v21.3.1"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=74824da9c4fe9dd0b405db70881a1158fa1af216" #v21.3.2
   count  = var.karpenter.create ? 1 : 0
 
   create                                    = var.karpenter.create
