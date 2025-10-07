@@ -55,9 +55,10 @@ resource "aws_iam_service_linked_role" "spot" {
 }
 
 module "karpenter_irsa_role" {
-  count  = var.karpenter.create && var.karpenter.iam_enable_irsa ? 1 : 0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts?ref=dc7a9f3bed20aaaba05d151b0789745070424b3a" #v6.2.1
-  name   = "${var.name}-${var.karpenter.iam_role_name}"
+  count           = var.karpenter.create && var.karpenter.iam_enable_irsa ? 1 : 0
+  source          = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts?ref=dc7a9f3bed20aaaba05d151b0789745070424b3a" #v6.2.1
+  name            = "${var.name}-${var.karpenter.iam_role_name}"
+  use_name_prefix = false
   policies = {
     svc = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.name}-${var.karpenter.iam_role_name}"
   }

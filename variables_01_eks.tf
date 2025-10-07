@@ -655,7 +655,7 @@ variable "addons_timeouts" {
     update = optional(string)
     delete = optional(string)
   })
-  default = null
+  default = {}
 }
 
 ################################################################################
