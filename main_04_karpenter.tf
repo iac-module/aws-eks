@@ -1,5 +1,5 @@
 module "karpenter" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=74824da9c4fe9dd0b405db70881a1158fa1af216" #v21.3.2
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=c41b58277ab3951eca8d11863edf178135ec7654" #v21.10.1
   count  = var.karpenter.create ? 1 : 0
 
   create                                    = var.karpenter.create
@@ -7,6 +7,7 @@ module "karpenter" {
   cluster_name                              = module.eks[0].cluster_name
   region                                    = var.karpenter.region
   create_iam_role                           = var.karpenter.create_iam_role
+  enable_inline_policy                      = var.karpenter.enable_inline_policy
   iam_role_name                             = "${var.name}-${var.karpenter.iam_role_name}"
   iam_role_use_name_prefix                  = var.karpenter.iam_role_use_name_prefix
   iam_role_path                             = var.karpenter.iam_role_path
@@ -31,6 +32,7 @@ module "karpenter" {
   queue_managed_sse_enabled                 = var.karpenter.queue_managed_sse_enabled
   queue_kms_master_key_id                   = var.karpenter.queue_kms_master_key_id
   queue_kms_data_key_reuse_period_seconds   = var.karpenter.queue_kms_data_key_reuse_period_seconds
+  queue_policy_statements                   = var.karpenter.queue_policy_statements
   create_node_iam_role                      = var.karpenter.create_node_iam_role
   cluster_ip_family                         = var.karpenter.cluster_ip_family
   node_iam_role_arn                         = var.karpenter.node_iam_role_arn

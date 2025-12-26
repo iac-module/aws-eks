@@ -1,5 +1,5 @@
 module "eks" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=74824da9c4fe9dd0b405db70881a1158fa1af216" #v21.3.2
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=c41b58277ab3951eca8d11863edf178135ec7654" #v21.10.1
   count  = var.create ? 1 : 0
 
   create                                       = var.create
@@ -13,6 +13,7 @@ module "eks" {
   force_update_version                         = var.force_update_version
   authentication_mode                          = var.authentication_mode
   compute_config                               = var.compute_config
+  control_plane_scaling_config                 = var.control_plane_scaling_config
   upgrade_policy                               = var.upgrade_policy
   remote_network_config                        = var.remote_network_config
   zonal_shift_config                           = var.zonal_shift_config
@@ -37,6 +38,7 @@ module "eks" {
   kms_key_description                          = var.kms_key_description
   kms_key_deletion_window_in_days              = var.kms_key_deletion_window_in_days
   enable_kms_key_rotation                      = var.enable_kms_key_rotation
+  kms_key_rotation_period_in_days              = var.kms_key_rotation_period_in_days
   kms_key_enable_default_policy                = var.kms_key_enable_default_policy
   kms_key_owners                               = var.kms_key_owners
   kms_key_administrators                       = var.kms_key_administrators
