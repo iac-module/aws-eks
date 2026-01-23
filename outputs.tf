@@ -67,6 +67,11 @@ output "cluster_ip_family" {
   value       = try(module.eks[0].cluster_ip_family, null)
 }
 
+output "cluster_control_plane_scaling_tier" {
+  description = "The EKS Provisioned Control Plane scaling tier for the cluster"
+  value       = try(module.eks[0].cluster_control_plane_scaling_tier, null)
+}
+
 ################################################################################
 # Access Entry
 ################################################################################
