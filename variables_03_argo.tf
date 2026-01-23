@@ -7,7 +7,7 @@ variable "argocd" {
     extra_command_arg  = optional(list(string), [])
     chart_repo         = optional(string, "https://argoproj.github.io/argo-helm")
     chart_name         = optional(string, "argo-cd")
-    chart_version      = optional(string, "9.2.2")
+    chart_version      = optional(string, "9.3.5")
     helm_release_name  = optional(string, "argocd")
     app_project_name   = optional(string, "cluster-addons")
     path_to_values     = optional(string, "argocd-values.yaml")
@@ -26,7 +26,7 @@ variable "argocd" {
       path              = optional(string, "")
       chart_repo        = optional(string, "https://argoproj.github.io/argo-helm")
       chart_name        = optional(string, "argocd-apps")
-      chart_version     = optional(string, "2.0.2")
+      chart_version     = optional(string, "2.0.4")
       helm_release_name = optional(string, "argocd-apps")
       repository = optional(object({
         path           = optional(string, "")
