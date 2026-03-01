@@ -72,6 +72,14 @@ variable "compute_config" {
   default = null
 }
 
+variable "control_plane_scaling_config" {
+  description = "Configuration block for the EKS Provisioned Control Plane scaling tier. Valid values for tier are `standard`, `tier-xl`, `tier-2xl`, and `tier-4xl`"
+  type = object({
+    tier = string
+  })
+  default = null
+}
+
 variable "upgrade_policy" {
   description = "Configuration block for the cluster upgrade policy"
   type = object({
@@ -262,6 +270,12 @@ variable "enable_kms_key_rotation" {
   description = "Specifies whether key rotation is enabled"
   type        = bool
   default     = true
+}
+
+variable "kms_key_rotation_period_in_days" {
+  description = "Custom period of time between each key rotation date. If you specify a value, it must be between `90` and `2560`, inclusive. If you do not specify a value, it defaults to `365`"
+  type        = number
+  default     = null
 }
 
 variable "kms_key_enable_default_policy" {
@@ -1239,7 +1253,17 @@ variable "eks_managed_node_groups" {
     instance_types                 = optional(list(string))
     labels                         = optional(map(string))
     node_repair_config = optional(object({
-      enabled = optional(bool)
+      enabled                                 = optional(bool)
+      max_parallel_nodes_repaired_count       = optional(number)
+      max_parallel_nodes_repaired_percentage  = optional(number)
+      max_unhealthy_node_threshold_count      = optional(number)
+      max_unhealthy_node_threshold_percentage = optional(number)
+      node_repair_config_overrides = optional(list(object({
+        min_repair_wait_time_mins = number
+        node_monitoring_condition = string
+        node_unhealthy_reason     = string
+        repair_action             = string
+      })))
     }))
     remote_access = optional(object({
       ec2_ssh_key               = optional(string)
@@ -1253,6 +1277,7 @@ variable "eks_managed_node_groups" {
     update_config = optional(object({
       max_unavailable            = optional(number)
       max_unavailable_percentage = optional(number)
+      update_strategy            = optional(string)
     }))
     timeouts = optional(object({
       create = optional(string)
