@@ -9,6 +9,7 @@ variable "karpenter" {
     # Karpenter controller IAM Role
     ################################################################################
     create_iam_role                           = optional(bool, true)
+    enable_inline_policy                      = optional(bool, false)
     iam_role_name                             = optional(string, "KarpenterController")
     iam_role_use_name_prefix                  = optional(bool, true)
     iam_role_path                             = optional(string, "/")
@@ -61,6 +62,27 @@ variable "karpenter" {
     queue_managed_sse_enabled               = optional(bool, true)
     queue_kms_master_key_id                 = optional(string, null)
     queue_kms_data_key_reuse_period_seconds = optional(string, null)
+    queue_policy_statements = optional(map(object({
+      sid           = optional(string)
+      actions       = optional(list(string))
+      not_actions   = optional(list(string))
+      effect        = optional(string)
+      resources     = optional(list(string))
+      not_resources = optional(list(string))
+      principals = optional(list(object({
+        type        = string
+        identifiers = list(string)
+      })))
+      not_principals = optional(list(object({
+        type        = string
+        identifiers = list(string)
+      })))
+      condition = optional(list(object({
+        test     = string
+        values   = list(string)
+        variable = string
+      })))
+    })), null)
     ################################################################################
     # Node IAM Role
     ################################################################################
