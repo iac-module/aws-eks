@@ -86,18 +86,19 @@ variable "karpenter" {
     ################################################################################
     # Node IAM Role
     ################################################################################
-    create_node_iam_role               = optional(bool, true)
-    cluster_ip_family                  = optional(string, "ipv4")
-    node_iam_role_arn                  = optional(string, null)
-    node_iam_role_name                 = optional(string, null)
-    node_iam_role_use_name_prefix      = optional(bool, true)
-    node_iam_role_path                 = optional(string, "/")
-    node_iam_role_description          = optional(string, null)
-    node_iam_role_max_session_duration = optional(number, null)
-    node_iam_role_permissions_boundary = optional(string, null)
-    node_iam_role_attach_cni_policy    = optional(bool, true)
-    node_iam_role_additional_policies  = optional(map(string), {})
-    node_iam_role_tags                 = optional(map(string), {})
+    create_node_iam_role                   = optional(bool, true)
+    cluster_ip_family                      = optional(string, "ipv4")
+    node_iam_role_arn                      = optional(string, null)
+    node_iam_role_name                     = optional(string, null)
+    node_iam_role_use_name_prefix          = optional(bool, true)
+    node_iam_role_path                     = optional(string, "/")
+    node_iam_role_description              = optional(string, null)
+    node_iam_role_max_session_duration     = optional(number, null)
+    node_iam_role_permissions_boundary     = optional(string, null)
+    node_iam_role_attach_cni_policy        = optional(bool, true)
+    node_iam_role_additional_policies      = optional(map(string), {})
+    node_iam_role_source_account_condition = optional(bool, false)
+    node_iam_role_tags                     = optional(map(string), {})
     ################################################################################
     # Access Entry
     ################################################################################

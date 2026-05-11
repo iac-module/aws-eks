@@ -1,5 +1,5 @@
 module "karpenter" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=42693d40bceb3ad80d49b0574cc3046455c2def6" #v21.15.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks//modules/karpenter?ref=2d63f1fe283a9a00b2b9d6befced1cd324bf9217" #v21.20.0
   count  = var.karpenter.create ? 1 : 0
 
   create                                    = var.karpenter.create
@@ -44,6 +44,7 @@ module "karpenter" {
   node_iam_role_permissions_boundary        = var.karpenter.node_iam_role_permissions_boundary
   node_iam_role_attach_cni_policy           = var.karpenter.node_iam_role_attach_cni_policy
   node_iam_role_additional_policies         = var.karpenter.node_iam_role_additional_policies
+  node_iam_role_source_account_condition    = var.karpenter.node_iam_role_source_account_condition
   node_iam_role_tags                        = var.karpenter.node_iam_role_tags
   create_access_entry                       = var.karpenter.create_access_entry
   access_entry_type                         = var.karpenter.access_entry_type

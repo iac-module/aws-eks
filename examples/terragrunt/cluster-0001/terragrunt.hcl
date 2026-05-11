@@ -22,7 +22,7 @@ locals {
 
 inputs = {
   name               = local.cluster_name
-  kubernetes_version = "1.33"
+  kubernetes_version = "1.35"
 
   endpoint_public_access = true
   endpoint_public_access_cidrs = [

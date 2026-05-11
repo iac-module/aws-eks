@@ -1,7 +1,7 @@
 
 module "s3_bucket_for_logs" {
   count  = var.aws_lb_resources.create && var.create ? 1 : 0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=8eecd4bfe167b3606755a0f8150514e9dcb2bf67" #v5.10.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=af0286ff37a66c2b79faf360e6e2663744b8e5b5" #v5.13.0
 
   bucket                   = "${data.aws_caller_identity.current.account_id}-${data.aws_region.current.region}-${var.aws_lb_resources.bucket_suffix}"
   acl                      = "log-delivery-write"
