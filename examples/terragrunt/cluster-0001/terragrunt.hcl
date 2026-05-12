@@ -154,19 +154,7 @@ inputs = {
     # One access entry with a policy associated
     devops = {
       kubernetes_groups = []
-      principal_arn     = "arn:aws:iam::${local.account_vars.locals.aws_account_id}:role/YYYYYYY"
-      policy_associations = {
-        1 = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-          access_scope = {
-            type = "cluster"
-          }
-        }
-      }
-    }
-    terraform-role = {
-      kubernetes_groups = []
-      principal_arn     = "arn:aws:iam::${local.account_vars.locals.aws_account_id}:role/terraform-role"
+      principal_arn     = "arn:aws:iam::145185392492:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_eb168dc4e012dd6d"
       policy_associations = {
         1 = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
@@ -179,7 +167,7 @@ inputs = {
   }
   tags = local.common_tags.locals.common_tags
   karpenter = {
-    create_pod_identity_association = true
+    create_pod_identity_association = false
     node_iam_role_additional_policies = {
       AmazonSSMManagedInstanceCore   = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
       ebs_csi_role                   = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",

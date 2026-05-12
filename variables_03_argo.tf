@@ -19,7 +19,9 @@ variable "argocd" {
       secret_name                    = optional(string, "argocd-infra-deployment-repo")
       githubAppID                    = optional(string, "")
       githubAppInstallationID        = optional(string, "")
-      param_store_repository_ssk_key = string
+      param_store_repository_ssk_key = optional(string, "")
+      use_secrets_manager            = optional(bool, false)
+      secrets_manager_secret_id      = optional(string, "")
     })
     app_of_apps = optional(object({
       name              = optional(string, "apps")
@@ -28,6 +30,7 @@ variable "argocd" {
       chart_name        = optional(string, "argocd-apps")
       chart_version     = optional(string, "2.0.4")
       helm_release_name = optional(string, "argocd-apps")
+      value_files       = optional(list(string), [])
       repository = optional(object({
         path           = optional(string, "")
         url            = optional(string, "git@github.com:X/Y-K8S-INFRA.git")

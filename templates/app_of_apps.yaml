@@ -10,8 +10,16 @@ applications:
       repoURL: ${repoURL}
       targetRevision: ${targetRevision}
       path: ${path}
+%{ if length(value_files) > 0 ~}
+      helm:
+        valueFiles:
+%{ for f in value_files ~}
+          - ${f}
+%{ endfor ~}
+%{ else ~}
       directory:
         recurse: true
+%{ endif ~}
     destination:
       server: https://kubernetes.default.svc
       namespace: ${namespace}

@@ -29,4 +29,5 @@ repos:
       - id: detect-private-key
       - id: detect-aws-credentials
       - id: check-yaml
+        exclude: templates/
       - id: no-commit-to-branch
