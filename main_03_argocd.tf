@@ -39,7 +39,7 @@ resource "kubernetes_secret_v1" "oidc_secret" {
   }
   data = {
     # tflint-ignore: terraform_deprecated_interpolation
-    "${each.value.data}" = data.aws_ssm_parameter.oidc_config[each.key].value
+    "${each.value.data}" = each.value.use_secrets_manager ? jsondecode(data.aws_secretsmanager_secret_version.oidc_config[each.key].secret_string)[each.value.secrets_manager_key] : data.aws_ssm_parameter.oidc_config[each.key].value
   }
 }
 
@@ -54,7 +54,7 @@ resource "kubernetes_secret_v1" "repository_secret_deployment_key" {
   }
   data = {
     type          = "git"
-    sshPrivateKey = data.aws_ssm_parameter.ssh_key.value
+    sshPrivateKey = data.aws_ssm_parameter.ssh_key[0].value
     url           = var.argocd.repo_credentials_configuration.repo_url
   }
 }
@@ -69,9 +69,9 @@ resource "kubernetes_secret_v1" "repository_secret_github_app" {
     }
   }
   data = {
-    githubAppID             = var.argocd.repo_credentials_configuration.githubAppID
-    githubAppInstallationID = var.argocd.repo_credentials_configuration.githubAppInstallationID
-    githubAppPrivateKey     = data.aws_ssm_parameter.ssh_key.value
+    githubAppID             = var.argocd.repo_credentials_configuration.use_secrets_manager ? jsondecode(data.aws_secretsmanager_secret_version.github_app[0].secret_string)["GITHUB_APP_ID"] : var.argocd.repo_credentials_configuration.githubAppID
+    githubAppInstallationID = var.argocd.repo_credentials_configuration.use_secrets_manager ? jsondecode(data.aws_secretsmanager_secret_version.github_app[0].secret_string)["GITHUB_APP_INSTALLATION_ID"] : var.argocd.repo_credentials_configuration.githubAppInstallationID
+    githubAppPrivateKey     = var.argocd.repo_credentials_configuration.use_secrets_manager ? jsondecode(data.aws_secretsmanager_secret_version.github_app[0].secret_string)["GITHUB_APP_PRIVATE_KEY"] : data.aws_ssm_parameter.ssh_key[0].value
     url                     = var.argocd.repo_credentials_configuration.repo_url
   }
 }
@@ -108,6 +108,7 @@ resource "helm_release" "app_of_apps" {
       project_name       = var.argocd.app_project_name
       automated_prune    = var.argocd.automated_prune
       automated_selfHeal = var.argocd.automated_selfHeal
+      value_files        = var.argocd.app_of_apps.value_files
     })
   ]
 }

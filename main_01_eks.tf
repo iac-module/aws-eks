@@ -1,5 +1,5 @@
 module "eks" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=42693d40bceb3ad80d49b0574cc3046455c2def6" #v21.15.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks?ref=2d63f1fe283a9a00b2b9d6befced1cd324bf9217" #v21.20.0
   count  = var.create ? 1 : 0
 
   create                                       = var.create

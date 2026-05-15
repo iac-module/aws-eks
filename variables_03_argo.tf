@@ -7,7 +7,7 @@ variable "argocd" {
     extra_command_arg  = optional(list(string), [])
     chart_repo         = optional(string, "https://argoproj.github.io/argo-helm")
     chart_name         = optional(string, "argo-cd")
-    chart_version      = optional(string, "9.3.5")
+    chart_version      = optional(string, "9.5.13")
     helm_release_name  = optional(string, "argocd")
     app_project_name   = optional(string, "cluster-addons")
     path_to_values     = optional(string, "argocd-values.yaml")
@@ -19,7 +19,9 @@ variable "argocd" {
       secret_name                    = optional(string, "argocd-infra-deployment-repo")
       githubAppID                    = optional(string, "")
       githubAppInstallationID        = optional(string, "")
-      param_store_repository_ssk_key = string
+      param_store_repository_ssk_key = optional(string, "")
+      use_secrets_manager            = optional(bool, false)
+      secrets_manager_name           = optional(string, "")
     })
     app_of_apps = optional(object({
       name              = optional(string, "apps")
@@ -28,6 +30,7 @@ variable "argocd" {
       chart_name        = optional(string, "argocd-apps")
       chart_version     = optional(string, "2.0.4")
       helm_release_name = optional(string, "argocd-apps")
+      value_files       = optional(list(string), [])
       repository = optional(object({
         path           = optional(string, "")
         url            = optional(string, "git@github.com:X/Y-K8S-INFRA.git")
@@ -35,9 +38,12 @@ variable "argocd" {
       }))
     }))
     oidc_auth = optional(map(object({
-      aws  = optional(string, "argocd-oidc-config")
-      k8s  = optional(string, "argocd-oidc-config")
-      data = optional(string, "clientSecret")
+      aws                  = optional(string, "argocd-oidc-config")
+      k8s                  = optional(string, "argocd-oidc-config")
+      data                 = optional(string, "clientSecret")
+      use_secrets_manager  = optional(bool, false)
+      secrets_manager_name = optional(string, "")
+      secrets_manager_key  = optional(string, "CLIENT_SECRET")
     })), {})
   })
 }

@@ -10,7 +10,7 @@ repos:
           - --hook-config=--retry-once-with-cleanup=true
       - id: terraform_tflint
         args:
-          - '--args=--config=__GIT_WORKING_DIR__/.tflint.hcl'
+          - "--args=--config=__GIT_WORKING_DIR__/.tflint.hcl"
       - id: terraform_docs
         args:
           - --hook-config=--path-to-file=README.md
@@ -29,4 +29,5 @@ repos:
       - id: detect-private-key
       - id: detect-aws-credentials
       - id: check-yaml
+        exclude: templates/
       - id: no-commit-to-branch

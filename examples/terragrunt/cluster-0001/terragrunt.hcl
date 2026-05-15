@@ -22,7 +22,7 @@ locals {
 
 inputs = {
   name               = local.cluster_name
-  kubernetes_version = "1.33"
+  kubernetes_version = "1.35"
 
   endpoint_public_access = true
   endpoint_public_access_cidrs = [
@@ -164,22 +164,10 @@ inputs = {
         }
       }
     }
-    terraform-role = {
-      kubernetes_groups = []
-      principal_arn     = "arn:aws:iam::${local.account_vars.locals.aws_account_id}:role/terraform-role"
-      policy_associations = {
-        1 = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-          access_scope = {
-            type = "cluster"
-          }
-        }
-      }
-    }
   }
   tags = local.common_tags.locals.common_tags
   karpenter = {
-    create_pod_identity_association = true
+    create_pod_identity_association = false
     node_iam_role_additional_policies = {
       AmazonSSMManagedInstanceCore   = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
       ebs_csi_role                   = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
@@ -196,11 +184,10 @@ inputs = {
   }
   argocd = {
     repo_credentials_configuration = {
-      type                           = "github_app"
-      githubAppID                    = "XXXX"
-      githubAppInstallationID        = "YYYYY"
-      repo_url                       = "https://github.com/${local.account_vars.locals.gh_organization}/devops-k8s-core.git"
-      param_store_repository_ssk_key = "/${local.account_vars.locals.owner}/${local.account_vars.locals.env_name}/infra/shared/secret/K8S-INFRA-DeployKey"
+      type                      = "github_app"
+      repo_url                  = "https://github.com/${local.account_vars.locals.gh_organization}/devops-k8s-core.git"
+      use_secrets_manager       = true
+      secrets_manager_name = "REPLACE_WITH_YOUR_ARGOCD_GITHUB_APP_SECRET_NAME" #checkov:skip=CKV_SECRET_6:Placeholder value
     }
     app_of_apps = {
       name = local.cluster_name
@@ -208,6 +195,14 @@ inputs = {
         url            = "https://github.com/${local.account_vars.locals.gh_organization}/devops-k8s-core.git"
         targetRevision = "master"
         path           = "${local.account_vars.locals.env_name}"
+      }
+    }
+    oidc_auth = {
+      okta = {
+        k8s                       = "argocd-okta-oidc"
+        data                      = "clientSecret"
+        use_secrets_manager       = true
+        secrets_manager_name = "REPLACE_WITH_YOUR_ARGOCD_OIDC_SECRET_NAME" #checkov:skip=CKV_SECRET_6:Placeholder value
       }
     }
   }

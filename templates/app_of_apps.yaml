@@ -5,13 +5,21 @@ applications:
       app.kubernetes.io/managed-by: terragrunt
     finalizers:
       - resources-finalizer.argocd.argoproj.io
-    project: cluster-addons
+    project: ${project_name}
     source:
       repoURL: ${repoURL}
       targetRevision: ${targetRevision}
       path: ${path}
+%{ if length(value_files) > 0 ~}
+      helm:
+        valueFiles:
+%{ for f in value_files ~}
+          - ${f}
+%{ endfor ~}
+%{ else ~}
       directory:
         recurse: true
+%{ endif ~}
     destination:
       server: https://kubernetes.default.svc
       namespace: ${namespace}
