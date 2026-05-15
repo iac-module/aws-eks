@@ -39,7 +39,7 @@ resource "kubernetes_secret_v1" "oidc_secret" {
   }
   data = {
     # tflint-ignore: terraform_deprecated_interpolation
-    "${each.value.data}" = data.aws_ssm_parameter.oidc_config[each.key].value
+    "${each.value.data}" = each.value.use_secrets_manager ? jsondecode(data.aws_secretsmanager_secret_version.oidc_config[each.key].secret_string)[each.value.secrets_manager_key] : data.aws_ssm_parameter.oidc_config[each.key].value
   }
 }
 

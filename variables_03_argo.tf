@@ -21,7 +21,7 @@ variable "argocd" {
       githubAppInstallationID        = optional(string, "")
       param_store_repository_ssk_key = optional(string, "")
       use_secrets_manager            = optional(bool, false)
-      secrets_manager_secret_id      = optional(string, "")
+      secrets_manager_name           = optional(string, "")
     })
     app_of_apps = optional(object({
       name              = optional(string, "apps")
@@ -38,9 +38,12 @@ variable "argocd" {
       }))
     }))
     oidc_auth = optional(map(object({
-      aws  = optional(string, "argocd-oidc-config")
-      k8s  = optional(string, "argocd-oidc-config")
-      data = optional(string, "clientSecret")
+      aws                  = optional(string, "argocd-oidc-config")
+      k8s                  = optional(string, "argocd-oidc-config")
+      data                 = optional(string, "clientSecret")
+      use_secrets_manager  = optional(bool, false)
+      secrets_manager_name = optional(string, "")
+      secrets_manager_key  = optional(string, "CLIENT_SECRET")
     })), {})
   })
 }

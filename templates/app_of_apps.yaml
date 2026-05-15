@@ -5,7 +5,7 @@ applications:
       app.kubernetes.io/managed-by: terragrunt
     finalizers:
       - resources-finalizer.argocd.argoproj.io
-    project: cluster-addons
+    project: ${project_name}
     source:
       repoURL: ${repoURL}
       targetRevision: ${targetRevision}
